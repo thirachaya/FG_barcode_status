@@ -175,6 +175,10 @@ const MonthlyChart = () => {
     ],
   };
 
+  const clearDateRange = () => {
+    setDateRange([null, null]);
+  };  
+
   return (
     <div className="w-[70%] h-full shadow-lg rounded-lg">
       <div className="flex justify-start mb-4 space-x-4">
@@ -205,7 +209,7 @@ const MonthlyChart = () => {
             showMonthDropdown
             dateFormat="yyyy/MM/dd"
             placeholderText="Select date range"
-            className="bg-white text-black border border-gray-300 p-1.5 rounded-md shadow-sm"
+            className="bg-white text-black border border-gray-300 p-1.5 rounded-md shadow-sm w-56"
           />
           <img
             src={CalendarIcon}
@@ -214,6 +218,12 @@ const MonthlyChart = () => {
             className="absolute right-1 top-2"
           />
         </div>
+        <button
+          onClick={clearDateRange}
+          className="bg-red-500 text-white p-2 rounded-md"
+        >
+          Clear
+        </button>
       </div>
       {loading ? (
         <div className="text-center py-10">

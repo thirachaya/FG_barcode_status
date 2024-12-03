@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import * as XLSX from "xlsx";
 import { PlantContext } from "../pages/PlantContext";
 import { useParams } from "react-router-dom";
+import ExcelIcon from "../assets/excel.png";
 
 const path_api = import.meta.env.VITE_API_URL;
 
@@ -18,8 +20,8 @@ function DetailsTable() {
       try {
         setIsLoading(true);
         const apiUrl = id
-          ? `${path_api}/Aging/${id}` 
-          : `${path_api}/detail?year=2024&month=8&plant=${plant}`; 
+          ? `${path_api}/Aging/${id}`
+          : `${path_api}/detail?year=2024&month=8&plant=${plant}`;
         const response = await axios.get(apiUrl);
         setData(response.data);
       } catch (error) {
@@ -104,13 +106,29 @@ function DetailsTable() {
     setCurrentPage(1);
   };
 
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Details");
+    XLSX.writeFile(workbook, "Data.xlsx");
+  };
+
   return (
     <div>
       <div className="overflow-x-auto">
+        <div className="flex justify-end">
+          <button
+            onClick={exportToExcel}
+            className="flex mb-4 inline-block px-6 py-2 border-2 border-emerald-900 rounded-md text-white bg-emerald-800 hover:bg-green-600 gap-2"
+          >
+            <div>Export to Excel</div>
+            <img src={ExcelIcon} alt="" width={"24px"} />
+          </button>
+        </div>
         <table className="min-w-full text-sm border border-gray-200 shadow-md rounded-lg">
           <thead>
             <tr className="text-white bg-sky-800">
-              <th className="px-2 py-3">#</th> 
+              <th className="px-2 py-3">#</th>
               <th className="px-2 py-3">Plant</th>
               <th className="px-2 py-3">Product Code</th>
               <th className="px-2 py-3">Product Description</th>
@@ -135,7 +153,7 @@ function DetailsTable() {
                 <tr key={index} className="hover:bg-gray-700">
                   <td className="px-2 py-2 border-r">
                     {(currentPage - 1) * rowsPerPage + index + 1}
-                  </td> 
+                  </td>
                   <td className="px-2 py-2 border-r">{row.plant}</td>
                   <td className="px-2 py-2 border-r">{row.product_code}</td>
                   <td className="px-2 py-2 border-r">{row.product_desc}</td>
