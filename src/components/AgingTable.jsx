@@ -77,7 +77,7 @@ function AgingTable() {
               </td>
             </tr>
           ) : (
-            data.map((row, index) => (
+            data.map((row) => (
               <tr className="border-b">
                 <td
                   className="px-6 py-4 border-r hover:bg-sky-900 cursor-pointer"

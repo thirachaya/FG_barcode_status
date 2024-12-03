@@ -18,8 +18,8 @@ function DetailsTable() {
       try {
         setIsLoading(true);
         const apiUrl = id
-          ? `${path_api}/api/barcode/Aging/${id}` 
-          : `${path_api}/api/barcode/detail?year=2024&month=8&plant=${plant}`; 
+          ? `${path_api}/Aging/${id}` 
+          : `${path_api}/detail?year=2024&month=8&plant=${plant}`; 
         const response = await axios.get(apiUrl);
         setData(response.data);
       } catch (error) {
