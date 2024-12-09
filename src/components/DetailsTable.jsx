@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { PlantContext } from "../pages/PlantContext";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import ExcelIcon from "../assets/excel.png";
 
 const path_api = import.meta.env.VITE_API_URL;
@@ -10,7 +10,16 @@ const path_api = import.meta.env.VITE_API_URL;
 function DetailsTable() {
   const { id } = useParams();
   const { plant } = useContext(PlantContext);
+  const location = useLocation();
+
+  const queryParams = new URLSearchParams(location.search);
+  const initialSearchType = queryParams.get("searchType") || "product_code";
+  const initialSearchQuery = queryParams.get("query") || "";
+
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchType, setSearchType] = useState(initialSearchType);
+  const [searchQuery, setSearchQuery] = useState(initialSearchQuery);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,6 +33,7 @@ function DetailsTable() {
           : `${path_api}/detail?year=2024&month=8&plant=${plant}`;
         const response = await axios.get(apiUrl);
         setData(response.data);
+        setFilteredData(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -33,10 +43,23 @@ function DetailsTable() {
     fetchData();
   }, [plant, id]);
 
-  const totalPages = Math.ceil(data.length / rowsPerPage);
+  useEffect(() => {
+    if (searchType && searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      const filtered = data.filter((row) =>
+        row[searchType]?.toString().toLowerCase().includes(lowerQuery)
+      );
+      setFilteredData(filtered);
+      setCurrentPage(1);
+    } else {
+      setFilteredData(data); 
+    }
+  }, [searchType, searchQuery, data]);
+
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   const indexOfLastRow = currentPage * rowsPerPage;
   const indexOfFirstRow = indexOfLastRow - rowsPerPage;
-  const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+  const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -53,7 +76,7 @@ function DetailsTable() {
           key={index}
           onClick={() => setCurrentPage(index + 1)}
           className={`px-3 py-1 mx-1 rounded ${
-            currentPage === index + 1 ? "bg-sky-800 text-white" : "bg-gray-200"
+            currentPage === index + 1 ? "bg-sky-800 text-white" : "bg-gray-400"
           }`}
         >
           {index + 1}
@@ -116,7 +139,26 @@ function DetailsTable() {
   return (
     <div>
       <div className="overflow-x-auto">
-        <div className="flex justify-end">
+        <div className="flex justify-between">
+          <div className="flex items-center mb-4">
+            <select
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+              className="px-2 py-2 border rounded-l"
+            >
+              <option value="product_code">Product Code</option>
+              <option value="prod_order">Product Order</option>
+            </select>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={`Search by ${
+                searchType === "product_code" ? "Product Code" : "Product Order"
+              }`}
+              className="px-3 py-2 w-64 border-t border-b border-r rounded-r border-gray-300"
+            />
+          </div>
           <button
             onClick={exportToExcel}
             className="flex mb-4 inline-block px-6 py-2 border-2 border-emerald-900 rounded-md text-white bg-emerald-800 hover:bg-green-600 gap-2"

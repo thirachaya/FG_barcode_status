@@ -77,8 +77,8 @@ function AgingTable() {
               </td>
             </tr>
           ) : (
-            data.map((row) => (
-              <tr className="border-b">
+            data.map((row, index) => (
+              <tr key={row.id || index} className="border-b">
                 <td
                   className="px-6 py-4 border-r hover:bg-sky-900 cursor-pointer"
                   onClick={() => handleRowClick("0-15-days")}

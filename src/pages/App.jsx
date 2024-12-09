@@ -1,50 +1,20 @@
-import React, { useContext, useState  } from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "../css/App.css";
 import TotalAll from "../components/TotalAll";
 import AgingTable from "../components/AgingTable";
 import MonthlyChart from "../components/MonthlyChart";
 import Details from "./Details";
-import Select from "react-select";
-import { PlantContext } from "./PlantContext";
+import NavBar from "../components/NavBar";
 
 function App() {
-  const { plant, setPlant } = useContext(PlantContext);
-  console.log("Current plant:", plant); 
-  const customSelect = {
-    control: (provided) => ({
-      ...provided,
-      borderRadius: "8px",
-      borderColor: "#6c757d",
-      boxShadow: "none",
-      width: "150px", 
-    fontSize: "16px",
-      "&:hover": {
-        borderColor: "#495057",
-      },
-    }),
-    option: (provided, state) => ({
-      ...provided,
-      backgroundColor: state.isSelected
-        ? "#1f5291"
-        : state.isFocused
-        ? "#a1c6f3"
-        : "white",
-      color: state.isSelected ? "white" : "#212529",
-      padding: 10,
-    }),
-    menu: (provided) => ({
-      ...provided,
-      borderRadius: "8px",
-      overflow: "hidden",
-    }),
-  };
+  const [timePeriod, setTimePeriod] = useState("monthly");
+  const [dateRange, setDateRange] = useState([null, null]);
+  const [startDate, endDate] = dateRange;
 
-  const options = [
-    { value: "9771", label: "RF" },
-    { value: "9773", label: "WAC" },
-    { value: "9774", label: "SAC" },
-  ];
+  const clearDateRange = () => {
+    setDateRange([null, null]);
+  };
 
   return (
     <Router>
@@ -53,18 +23,24 @@ function App() {
           path="/"
           element={
             <div className="base flex flex-col justify-center">
+              <NavBar
+                setTimePeriod={setTimePeriod}
+                startDate={startDate}
+                endDate={endDate}
+                setDateRange={setDateRange}
+                clearDateRange={clearDateRange}
+              />
+
               <div className="flex justify-center h-[70%] w-full p-3">
                 <div className="flex flex-col items-center">
-                  <Select
-                    value={options.find((option) => option.value === plant)}
-                    options={options}
-                    styles={customSelect}
-                    isSearchable={false}
-                    onChange={(selectedOption) => setPlant(selectedOption.value)}
-                  />
                   <TotalAll />
                 </div>
-                <MonthlyChart/>
+                <MonthlyChart
+                  timePeriod={timePeriod}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+                
               </div>
               <div className="flex justify-center h-[30%] p-5">
                 <AgingTable />
