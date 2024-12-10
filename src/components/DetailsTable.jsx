@@ -23,6 +23,8 @@ function DetailsTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(true);
+  const [filteredOptions, setFilteredOptions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +54,7 @@ function DetailsTable() {
       setFilteredData(filtered);
       setCurrentPage(1);
     } else {
-      setFilteredData(data); 
+      setFilteredData(data);
     }
   }, [searchType, searchQuery, data]);
 
@@ -68,6 +70,20 @@ function DetailsTable() {
   const handlePreviousPage = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
+
+  useEffect(() => {
+    if (searchQuery) {
+      const lowerQuery = searchQuery.toLowerCase();
+      const options = data
+        .map((row) => row[searchType]?.toString())
+        .filter((value) => value?.toLowerCase().includes(lowerQuery));
+      setFilteredOptions([...new Set(options)]);
+      setShowDropdown(true);
+    } else {
+      setFilteredOptions([]);
+      setShowDropdown(false);
+    }
+  }, [searchQuery, data, searchType]);
 
   const renderPageNumbers = () => {
     if (totalPages <= 5) {
@@ -129,8 +145,13 @@ function DetailsTable() {
     setCurrentPage(1);
   };
 
-  const exportToExcel = () => {
-    const worksheet = XLSX.utils.json_to_sheet(data);
+  const exportToExcel = () => {  //check data + export data as filtered
+    if (filteredData.length === 0) {
+      alert("No data to export!");
+      return;
+    }
+  
+    const worksheet = XLSX.utils.json_to_sheet(filteredData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Details");
     XLSX.writeFile(workbook, "Data.xlsx");
@@ -149,15 +170,37 @@ function DetailsTable() {
               <option value="product_code">Product Code</option>
               <option value="prod_order">Product Order</option>
             </select>
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search by ${
-                searchType === "product_code" ? "Product Code" : "Product Order"
-              }`}
-              className="px-3 py-2 w-64 border-t border-b border-r rounded-r border-gray-300"
-            />
+            <div className="relative">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={`Search by ${
+                  searchType === "product_code"
+                    ? "Product Code"
+                    : "Product Order"
+                }`}
+                className="px-3 py-2 w-64 border-t border-b border-r rounded-r border-gray-300"
+                onFocus={() => setShowDropdown(true)}
+                onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              />
+              {showDropdown && filteredOptions.length > 0 && (
+                <ul className="absolute z-10 bg-white text-black border border-gray-300 w-full max-h-48 overflow-y-auto">
+                  {filteredOptions.map((option, index) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        setSearchQuery(option);
+                        setShowDropdown(false);
+                      }}
+                      className="px-4 py-2 cursor-pointer hover:bg-blue-200"
+                    >
+                      {option}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
           <button
             onClick={exportToExcel}
@@ -213,7 +256,12 @@ function DetailsTable() {
             )}
           </tbody>
         </table>
-
+        <div className="flex justify-between items-center my-2">
+          <span className="text-gray-200">
+            Showing {Math.min(indexOfLastRow, filteredData.length)} of{" "}
+            {filteredData.length} rows
+          </span>
+        </div>
         <div className="flex justify-center mt-4">
           <button
             onClick={handlePreviousPage}
