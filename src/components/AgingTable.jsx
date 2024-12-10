@@ -37,20 +37,23 @@ function AgingTable() {
   };
 
   const handleRowClick = (column) => {
-    const columnRoutes = {
-      "0-15-days": 1,
-      "16-30-days": 2,
-      "31-60-days": 3,
-      "61-90-days": 4,
-      "91-180-days": 5,
-      "181-360-days": 6,
-      "360+days": 7,
-      total: "total", 
-    };
+    if (column === "Total") {
+      navigate("/details");
+    } else {
+      const columnRoutes = {
+        "0-15-days": 1,
+        "16-30-days": 2,
+        "31-60-days": 3,
+        "61-90-days": 4,
+        "91-180-days": 5,
+        "181-360-days": 6,
+        "360+days": 7,
+      };
 
-    const route = columnRoutes[column];
-    if (route) {
-      navigate(`/details/${route}`);
+      const route = columnRoutes[column];
+      if (route) {
+        navigate(`/details/${route}`);
+      }
     }
   };
 
@@ -99,7 +102,7 @@ function AgingTable() {
                 </td>
                 <td
                   className="px-6 py-4 border-r hover:bg-sky-900 cursor-pointer"
-                  onClick={() => handleRowClick( "61-90-days")}
+                  onClick={() => handleRowClick("61-90-days")}
                 >
                   {formatNumberWithCommas(parseInt(row.aging_61_90_days))}
                 </td>
@@ -123,7 +126,7 @@ function AgingTable() {
                 </td>
                 <td
                   className="px-6 py-4 hover:bg-sky-900 cursor-pointer"
-                  onClick={() => handleRowClick("total")}
+                  onClick={() => handleRowClick("Total")}
                 >
                   {formatNumberWithCommas(parseInt(row.Total))}
                 </td>
