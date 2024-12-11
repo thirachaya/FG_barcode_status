@@ -45,14 +45,6 @@ function App() {
               <div className="flex justify-center h-[30%] p-5">
                 <AgingTable />
               </div>
-              <div className="flex justify-end">
-                <Link
-                  to="/details"
-                  className="mt-5 inline-block px-6 py-2 border-2 rounded-md text-white hover:bg-sky-700"
-                >
-                  Go to Detail
-                </Link>
-              </div>
             </div>
           }
         />

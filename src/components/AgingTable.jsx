@@ -58,7 +58,7 @@ function AgingTable() {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="">
       <table className="min-w-full border border-gray-200 shadow-md rounded-lg">
         <thead>
           <tr className="text-white bg-sky-800 border-b">
