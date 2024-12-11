@@ -4,6 +4,7 @@ import * as XLSX from "xlsx";
 import { PlantContext } from "../pages/PlantContext";
 import { useParams, useLocation } from "react-router-dom";
 import ExcelIcon from "../assets/excel.png";
+import findIcon from "../assets/find.png";
 
 const path_api = import.meta.env.VITE_API_URL;
 
@@ -145,12 +146,13 @@ function DetailsTable() {
     setCurrentPage(1);
   };
 
-  const exportToExcel = () => {  //check data + export data as filtered
+  const exportToExcel = () => {
+    //check data + export data as filtered
     if (filteredData.length === 0) {
       alert("No data to export!");
       return;
     }
-  
+
     const worksheet = XLSX.utils.json_to_sheet(filteredData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Details");
@@ -165,7 +167,7 @@ function DetailsTable() {
             <select
               value={searchType}
               onChange={(e) => setSearchType(e.target.value)}
-              className="px-2 py-2 border rounded-l"
+              className="px-2 py-2 border rounded-l bg-gray-500"
             >
               <option value="product_code">Product Code</option>
               <option value="prod_order">Product Order</option>
@@ -183,6 +185,10 @@ function DetailsTable() {
                 className="px-3 py-2 w-64 border-t border-b border-r rounded-r border-gray-300"
                 onFocus={() => setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+              />
+              <img
+                src={findIcon}
+                class="absolute inset-y-0 right-1 h-6 w-6 top-2"
               />
               {showDropdown && filteredOptions.length > 0 && (
                 <ul className="absolute z-10 bg-white text-black border border-gray-300 w-full max-h-48 overflow-y-auto">

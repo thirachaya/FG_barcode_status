@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import CalendarIcon from "../assets/calendar.png";
 import { PlantContext } from "../pages/PlantContext";
+import findIcon from "../assets/find.png"
 
 const customSelect = {
   control: (provided) => ({
@@ -67,7 +68,7 @@ const NavBar = ({
   };
 
   return (
-    <div className="flex justify-center space-x-4">
+    <div className="flex justify-center items-center space-x-4">
       <Select
         value={plantOptions.find((option) => option.value === plant)}
         options={plantOptions}
@@ -106,7 +107,7 @@ const NavBar = ({
       </div>
       <button
         onClick={clearDateRange}
-        className="bg-red-500 text-white p-2 rounded-md"
+        className="bg-red-500 text-white px-2 h-[38px] rounded-md"
       >
         Clear
       </button>
@@ -115,23 +116,30 @@ const NavBar = ({
         <select
           value={searchType}
           onChange={(e) => setSearchType(e.target.value)}
-          className="px-2 py-2 border rounded-l"
+          className="px-2 py-2 border rounded-l bg-gray-500"
         >
           <option value="product_code">Product Code</option>
           <option value="prod_order">Product Order</option>
         </select>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={`Search by ${
-            searchType === "product_code" ? "Product Code" : "Product Order"
-          }`}
-          className="px-3 py-2 w-64 border-t border-b border-r border-gray-300"
-        />
+        <div className="relative flex">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder={`Search by ${
+              searchType === "product_code" ? "Product Code" : "Product Order"
+            }`}
+            className="px-3 py-2 w-64 border-t border-b border-gray-300"
+          />
+          <img
+            src={findIcon}
+            class="absolute inset-y-0 right-1 h-6 w-6 top-2"
+          />
+        </div>
+
         <button
           onClick={handleSearch}
-          className="px-4 py-2 bg-sky-600 text-white rounded-r"
+          className="px-4 py-2 bg-sky-700 text-white rounded-r border border-gray-300"
         >
           Search
         </button>
