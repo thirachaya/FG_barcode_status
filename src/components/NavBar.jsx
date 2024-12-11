@@ -67,6 +67,12 @@ const NavBar = ({
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="flex justify-center items-center space-x-4">
       <Select
@@ -126,6 +132,7 @@ const NavBar = ({
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
             placeholder={`Search by ${
               searchType === "product_code" ? "Product Code" : "Product Order"
             }`}
