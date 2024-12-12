@@ -88,11 +88,17 @@ const MonthlyChart = ({ timePeriod, startDate, endDate }) => {
         axisTick: {
           alignWithLabel: true,
         },
+        axisLabel: {
+          color: '#ffffff'
+        }
       },
     ],
     yAxis: [
       {
         type: "value",
+        axisLabel: {
+          color: '#ffffff'
+        }
       },
     ],
     series: [
@@ -108,7 +114,7 @@ const MonthlyChart = ({ timePeriod, startDate, endDate }) => {
       {
         type: "slider",
         start: 0,
-        end: 50,
+        end: 70,
         height: 10,
         backgroundColor: "rgba(47, 69, 84, 0.1)",
         borderColor: "#ccc",

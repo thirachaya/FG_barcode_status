@@ -38,8 +38,8 @@ function TotalMaxAgingandNotGI() {
   return (
     <div className="flex justify-between w-full">
       <div>
-        <h4 className="text-xl font-normal">Max Aging Days</h4>
-        <p>
+        <h4 className="text-xl md:text-xl lg:text-2xl font-normal">Max Aging Days</h4>
+        <p className="text-lg md:text-2xl lg:text-xl">
           {isLoading 
             ? "Loading..." 
             : maxAging !== null 
@@ -48,8 +48,8 @@ function TotalMaxAgingandNotGI() {
         </p>
       </div>
       <div>
-        <h4 className="text-xl font-normal">Not GI count</h4>
-        <p>
+        <h4 className="text-xl md:text-xl lg:text-2xl font-normal">Not GI count</h4>
+        <p className="text-lg md:text-2xl lg:text-xl">
           {isLoading
             ? "Loading..." 
             : notGI !== null 

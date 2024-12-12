@@ -33,11 +33,11 @@ function Total() {
 
   return (
     <div>
-      <h2 className="text-3xl font-semibold">Total GR</h2>
+      <h2 className="text-3xl md:text-4xl lg:text-4xl font-semibold">Total GR</h2>
       {isLoading ? (
-        <div className="text-xl font-normal">Loading...</div> 
+        <div className="text-xl md:text-xl lg:text-2xl font-normal">Loading...</div> 
       ) : (
-        <h4 className="text-xl font-normal">
+        <h4 className="text-xl md:text-xl lg:text-2xl font-normal">
           {total !== null ? formatNumberWithCommas(total) : "No Data Available"}
         </h4>
       )}
