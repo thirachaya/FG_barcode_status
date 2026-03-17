@@ -41,8 +41,9 @@ Frontend
 
 ---
 
-## 📂 Project Structure
+📂 Project Structure
 
+```
 src
 │
 ├── assets
@@ -61,6 +62,7 @@ src
 │
 ├── index.css
 └── main.jsx
+```
 
 ---
 
