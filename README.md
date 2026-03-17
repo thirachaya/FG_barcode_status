@@ -41,7 +41,7 @@ Frontend
 
 ---
 
-📂 Project Structure
+## 📂 Project Structure
 
 src
 │
